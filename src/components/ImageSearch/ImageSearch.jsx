@@ -40,7 +40,7 @@ function ImageSearch() {
       };
       fetch();
     }
-  }, [error.message, page, search]);
+  }, [error, page, search]);
 
   const openModal = (largeImageURL, tags) => {
     setShowModal(true);

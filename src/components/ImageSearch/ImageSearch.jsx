@@ -12,7 +12,7 @@ function ImageSearch() {
   const [page, setPage] = useState(1);
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [errorr, setError] = useState(null);
+  const [error, setError] = useState(null);
   const [totalHits, setTotalHits] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState(null);
@@ -33,14 +33,14 @@ function ImageSearch() {
           setTotalHits(data.data.totalHits);
           setArticles(prevState => [...prevState, ...data.data.hits]);
         } catch (error) {
-          setError(errorr.message);
+          setError(error.message);
         } finally {
           setLoading(false);
         }
       };
       fetch();
     }
-  }, [page, search]);
+  }, [error.message, page, search]);
 
   const openModal = (largeImageURL, tags) => {
     setShowModal(true);

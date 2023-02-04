@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 
-// import initialState from './InitialState';
 import Searchbar from 'components/Searchbar/Searchbar';
 import ImageGallery from 'components/ImageGallery/ImageGallery';
 import Loader from 'components/Loader/Loader';
@@ -62,9 +61,13 @@ function ImageSearch() {
   return (
     <>
       <Searchbar searchImages={searchImages} />
-      <ImageGallery items={articles} openModal={openModal} />
+      {Boolean(articles.length) && (
+        <ImageGallery items={articles} openModal={openModal} />
+      )}
       {loading && <Loader />}
-      {page < Math.ceil(totalHits / 40) && <Button loadMore={loadMore} />}
+      {!loading && page < Math.ceil(totalHits / 40) && (
+        <Button loadMore={loadMore} />
+      )}
       {showModal && (
         <Modal
           closeModal={closeModal}
@@ -75,94 +78,5 @@ function ImageSearch() {
     </>
   );
 }
-
-// class ImageSearch extends Component {
-//   state = {
-//     search: '',
-//     page: 1,
-//     articles: [],
-//     loading: false,
-//     error: null,
-//     totalHits: '',
-//     showModal: false,
-//     largeImageURL: null,
-//     tags: null,
-//   };
-
-//   searchImages = search => {
-//     this.setState({ search, articles: [], page: 1 });
-//   };
-
-//   async componentDidUpdate(prevProps, prevState) {
-//     const { search, page } = this.state;
-
-//     if (search !== prevState.search || prevState.page !== page) {
-//       try {
-//         this.setState({ loading: true });
-//         const data = await response(search, page);
-//         this.setState({ totalHits: data.data.totalHits });
-//         this.setState(prevState => ({
-//           articles: [...prevState.articles, ...data.data.hits],
-//         }));
-//       } catch (error) {
-//         this.setState({ error });
-//       } finally {
-//         this.setState({ loading: false });
-//       }
-//     }
-//   }
-
-//   openModal = (largeImageURL, tags) => {
-//     this.setState({
-//       showModal: true,
-//       largeImageURL: largeImageURL,
-//       tags: tags,
-//     });
-//   };
-
-//   closeModal = () => {
-//     this.setState({
-//       showModal: false,
-//       largeImageURL: null,
-//       tags: null,
-//     });
-//   };
-
-//   loadMore = () => {
-//     this.setState(({ page }) => ({
-//       page: page + 1,
-//     }));
-//   };
-
-//   render() {
-//     const {
-//       loading,
-//       articles,
-//       page,
-//       totalHits,
-//       showModal,
-//       largeImageURL,
-//       tags,
-//     } = this.state;
-
-//     return (
-//       <>
-//         <Searchbar searchImages={this.searchImages} />
-//         <ImageGallery items={articles} openModal={this.openModal} />
-//         {loading && <Loader />}
-//         {page < Math.ceil(totalHits / 40) && (
-//           <Button loadMore={this.loadMore} />
-//         )}
-//         {showModal && (
-//           <Modal
-//             closeModal={this.closeModal}
-//             largeImageURL={largeImageURL}
-//             tags={tags}
-//           />
-//         )}
-//       </>
-//     );
-//   }
-// }
 
 export default ImageSearch;

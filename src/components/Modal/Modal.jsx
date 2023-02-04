@@ -1,24 +1,26 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
 
 import styles from './Modal.module.css';
 
 const modalEl = document.querySelector('#modal');
 
 function Modal({ closeModal, largeImageURL, tags }) {
-  useEffect(() => {
-    document.addEventListener('keydown', closeModal);
-  }, [closeModal]);
+  const closeModalOnClick = useCallback(
+    ({ key, target, currentTarget }) => {
+      if (key === 'Escape' || target === currentTarget) {
+        closeModal();
+      }
+    },
+    [closeModal]
+  );
 
   useEffect(() => {
-    document.removeEventListener('keydown', closeModal);
-  }, [closeModal]);
+    document.addEventListener('keydown', closeModalOnClick);
 
-  const closeModalOnClick = ({ key, target, currentTarget }) => {
-    if (key === 'Escape' || target === currentTarget) {
-      closeModal();
-    }
-  };
+    return () => document.removeEventListener('keydown', closeModalOnClick);
+  }, [closeModalOnClick]);
 
   return createPortal(
     <div className={styles.Overlay} onClick={closeModalOnClick}>
@@ -31,3 +33,9 @@ function Modal({ closeModal, largeImageURL, tags }) {
 }
 
 export default Modal;
+
+Modal.propTypes = {
+  closeModal: PropTypes.func.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
+  tags: PropTypes.string.isRequired,
+};
